@@ -1,7 +1,10 @@
 rootProject.name = 'syuck-syuck'
 
-include ':components:support-jpa'
-include ':components:support-exception'
-include ':components:support-advice'
-include ':components:support-mapper'
-include ':components:module-member'
+/* supports */
+include ':features:support-mapper' // objectMapper 설정(기본 종속)
+include ':features:support-jpa' // jpa 기본 구성 (profile local 설정 시 h2)
+include ':features:support-exception' // 예외처리 기본 구성
+include ':features:support-advice'
+include ':features:support-swagger'
+include ':features:support-sentry'
+include ':features:support-event'

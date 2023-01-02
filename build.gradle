@@ -1,61 +1,36 @@
-buildscript {
-	ext {
-		springBootVersion = '2.7.3'
-	}
-
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-	}
+plugins {
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" apply false
+	id 'org.springframework.boot' version '2.7.3' apply false
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE' apply false
+	id 'java-library'
 }
 
 subprojects {
-	apply plugin: 'java-test-fixtures'
 	apply plugin: 'java-library'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
+	apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 	group = 'devgraft'
-	version = '0.0.1'
-	sourceCompatibility = '11'
+	version = null
+	sourceCompatibility = '17'
 
 	repositories {
 		mavenCentral()
 	}
-	ext {
-		set('springCloudVersion', "2021.0.0")
-	}
-
-	dependencyManagement {
-		imports {
-			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-		}
-	}
 
 	dependencies {
+		implementation fileTree(dir: 'libs', include: ['*.jar'])
+		implementation platform('org.springframework.cloud:spring-cloud-dependencies:2021.0.0')
 		implementation 'org.springframework.boot:spring-boot-starter'
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		compileOnly 'org.projectlombok:lombok'
-
-		testFixturesApi("org.mockito:mockito-core:3.5.13")
-		testFixturesApi("org.junit.jupiter:junit-jupiter-api:5.8.2")
-		testFixturesApi("org.assertj:assertj-core:3.22.0")
-		testFixturesApi "com.fasterxml.jackson.core:jackson-databind"
-		testFixturesApi 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
-		testFixturesApi 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-		if (!project.name.contains("support-")) {
-			implementation(project(':components:support-mapper'))
-			implementation(project(':components:support-exception'))
-			testImplementation(testFixtures(project(":components:support-exception")))
-			testImplementation(testFixtures(project(":components:support-mapper")))
-		}
-
 		annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		if (!project.name.contains("support-mapper")) {
+			implementation(project(':features:support-mapper'))
+		}
 	}
 
 	test {
@@ -64,5 +39,34 @@ subprojects {
 
 	if (!project.name.contains("app-")) {
 		bootJar { enabled = false }
+	}
+
+	clean {
+		delete 'out'
+		delete 'src/main/generated'
+	}
+
+	def querydslSrcDir = "$buildDir/generated/querydsl"
+
+	sourceSets {
+		main {
+			java {
+				srcDirs = ['src/main/java', querydslSrcDir]
+			}
+		}
+	}
+
+	querydsl {
+		library = "com.querydsl:querydsl-apt"
+		jpa = true
+		querydslSourcesDir = querydslSrcDir
+	}
+
+	compileQuerydsl {
+		options.annotationProcessorPath = configurations.querydsl
+	}
+
+	configurations {
+		querydsl.extendsFrom compileClasspath
 	}
 }
