@@ -8,6 +8,7 @@ include ':features:support-advice'
 include ':features:support-swagger'
 include ':features:support-sentry'
 include ':features:support-event'
+include ':features:support-credentials'
 
 include ':components:module-member'
 include ':components:module-friend'
