@@ -15,3 +15,5 @@ include ':components:module-friend'
 include ':components:module-chat'
 /* applications */
 include ':applications:app-discovery'
+include ':applications:app-gateway'
+include ':applications:app-member'
