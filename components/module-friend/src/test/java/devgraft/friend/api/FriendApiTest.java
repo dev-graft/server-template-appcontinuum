@@ -1,5 +1,6 @@
 package devgraft.friend.api;
 
+import devgraft.credentials.PrincipalImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class FriendApiTest {
     @Test
     void posFriend_expectOkHttpStatus() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/friends/posts")
-                        .principal(new Credentials("test"))
+                        .principal(new PrincipalImpl("test"))
                         .param("target", "targetId"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
