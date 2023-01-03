@@ -1,12 +1,16 @@
 package devgraft.credentials;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.springframework.core.annotation.AliasFor;
 
-@AllArgsConstructor
-@Getter
-public abstract class Credentials {
-    private String grant;
-    private String id;
-    private String secret; // << 해당 값은 Credentials 생성 이전에 검증하고 안넘겨주는 방식으로 해야할듯
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.PARAMETER)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Credentials {
+    @AliasFor("value")
+    String granted() default "";
+    String value() default "";
 }

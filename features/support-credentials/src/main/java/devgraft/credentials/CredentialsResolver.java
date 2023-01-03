@@ -6,18 +6,21 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public abstract class CredentialsResolver<T extends Credentials> implements HandlerMethodArgumentResolver {
-    private final Class<T> credentialsClass;
-    private final CredentialsProvider<T> credentialsProvider;
+import java.security.Principal;
 
-    protected CredentialsResolver(final Class<T> credentialsClass, final CredentialsProvider<T> credentialsProvider) {
-        this.credentialsClass = credentialsClass;
+public abstract class CredentialsResolver<T extends Principal> implements HandlerMethodArgumentResolver {
+    private final Class<T> principalClass;
+    private final CredentialsProvider<? extends Principal> credentialsProvider;
+
+    protected CredentialsResolver(final Class<T> principalClass, final CredentialsProvider<T> credentialsProvider) {
+        this.principalClass = principalClass;
         this.credentialsProvider = credentialsProvider;
     }
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return credentialsClass.isAssignableFrom(parameter.getParameterType());
+        return parameter.hasParameterAnnotation(Credentials.class) &&
+                principalClass.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override

@@ -1,4 +1,4 @@
-rootProject.name = 'syuck-syuck'
+rootProject.name = 'server-template-appcontinuum'
 
 /* supports */
 include ':features:support-mapper' // objectMapper 설정(기본 종속)

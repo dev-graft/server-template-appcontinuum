@@ -50,7 +50,7 @@ class SignUpUseCaseTest {
 
     @DisplayName("회원가입 요청 결과는 요구사항과 일치해야한다.")
     @Test
-    void signUp_exceptReturnValue() {
+    void signUp_expectReturnValue() {
         final SignUpRequest givenRequest = new SignUpRequest("nickname");
         UUID givenUUID = UUID.randomUUID();
         BDDMockito.given(identityCodeProvider.generatedIdentityCode()).willReturn(givenUUID.toString());

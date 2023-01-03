@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class FriendApi {
     // 친구 요청
     @PostMapping("posts")
-    public void postFriend(@RequestParam(name = "target") String targetIdentityCode) {
+    public void postFriend(Credentials principal, @RequestParam(name = "target") String targetIdentityCode) {
+        return;
     }
+
     // 친구 요청 수락
     // 친구 요청 취소
     // 친구 요청 거절

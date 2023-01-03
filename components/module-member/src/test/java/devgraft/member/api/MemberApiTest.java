@@ -31,7 +31,7 @@ class MemberApiTest {
 
     @DisplayName("회원가입 요청이 성공했을 경우 HttpStatus.CREATED를 반환한다.")
     @Test
-    void signUp_CreatedStatus() throws Exception {
+    void signUp_expectCreatedStatus() throws Exception {
         mockMvc.perform(post("/members/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
