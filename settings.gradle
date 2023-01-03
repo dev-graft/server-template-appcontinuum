@@ -9,7 +9,9 @@ include ':features:support-swagger'
 include ':features:support-sentry'
 include ':features:support-event'
 include ':features:support-credentials'
-
+/* components */
 include ':components:module-member'
 include ':components:module-friend'
 include ':components:module-chat'
+/* applications */
+include ':applications:app-discovery'
