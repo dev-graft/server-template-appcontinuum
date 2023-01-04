@@ -3,6 +3,7 @@ package devgraft.member.api;
 import devgraft.member.app.SignUpUseCase;
 import devgraft.member.app.SignUpUseCase.SignUpRequest;
 import devgraft.member.app.SignUpUseCase.SignUpResponse;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,7 @@ class MemberApiTest {
 
         ArgumentCaptor<SignUpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(SignUpRequest.class);
         Mockito.verify(signUpUseCase).signUp(requestArgumentCaptor.capture());
+        Assertions.assertThat(requestArgumentCaptor.getValue().getNickname()).isEqualTo("givenNickname");
     }
 
     @DisplayName("회원 가입 요청 결과는 SignUpUseCase 결과와 같다.")
