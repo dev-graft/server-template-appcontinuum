@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RequestMapping("members")
 @RequiredArgsConstructor
 @RestController
@@ -25,9 +28,12 @@ public class MemberApi {
 
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping("sign-up")
-    public SignUpResponse signUp(@RequestBody final SignUpRequest request) {
-        return signUpUseCase.signUp(request);
-    }
+    public void signUp(@RequestBody final SignUpRequest request, HttpServletResponse httpServletResponse) {
+        final SignUpResponse signUpResponse = signUpUseCase.signUp(request);
 
-    // 로그인
+        httpServletResponse.setHeader("ACCESS-TOKEN", signUpResponse.getAccessToken());
+        final Cookie cookie = new Cookie("REFRESH-TOKEN", signUpResponse.getRefreshToken());
+        cookie.setHttpOnly(true);
+        httpServletResponse.addCookie(cookie);
+    }
 }

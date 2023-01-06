@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -26,6 +25,9 @@ class MemberApiTest {
     @BeforeEach
     void setUp() {
         signUpUseCase = Mockito.mock(SignUpUseCase.class);
+        final SignUpResponse givenSignUpResponse = new SignUpResponse(null, null);
+        BDDMockito.given(signUpUseCase.signUp(any())).willReturn(givenSignUpResponse);
+
         MemberApi memberApi = new MemberApi(signUpUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(memberApi).build();
     }
@@ -70,24 +72,25 @@ class MemberApiTest {
     @DisplayName("[회원가입] 성공 시 헤더에 ACCESS-TOKEN이 저장됩니다.")
     @Test
     void signUp_responseAccessTokenToHeader() throws Exception {
-        final String givenIdentityCode = "uniqId";
-        BDDMockito.given(signUpUseCase.signUp(any())).willReturn(new SignUpResponse(null, null));
+        final SignUpResponse givenSignUpResponse = new SignUpResponse("ACC", null);
+        BDDMockito.given(signUpUseCase.signUp(any())).willReturn(givenSignUpResponse);
 
         mockMvc.perform(post("/members/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.identityCode", equalTo(givenIdentityCode)));
+                .andExpect(MockMvcResultMatchers.header().string("ACCESS-TOKEN", givenSignUpResponse.getAccessToken()));
     }
 
     @DisplayName("[회원가입] 성공 시 쿠키에 REFRESH-TOKEN이 저장됩니다.")
     @Test
     void signUp_responseRefreshTokenToCookie() throws Exception {
-        final String givenIdentityCode = "uniqId";
-        BDDMockito.given(signUpUseCase.signUp(any())).willReturn(new SignUpResponse(null, null));
+        final SignUpResponse givenSignUpResponse = new SignUpResponse(null, "REF");
+        BDDMockito.given(signUpUseCase.signUp(any())).willReturn(givenSignUpResponse);
 
         mockMvc.perform(post("/members/sign-up")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.identityCode", equalTo(givenIdentityCode)));
+                .andExpect(MockMvcResultMatchers.cookie().value("REFRESH-TOKEN", givenSignUpResponse.getRefreshToken()))
+                .andExpect(MockMvcResultMatchers.cookie().httpOnly("REFRESH-TOKEN", true));
     }
 }
