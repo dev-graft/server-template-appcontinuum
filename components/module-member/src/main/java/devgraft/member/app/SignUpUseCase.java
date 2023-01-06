@@ -1,5 +1,7 @@
 package devgraft.member.app;
 
+import devgraft.member.domain.AuthIssueService;
+import devgraft.member.domain.AuthIssueService.AuthIssuedResponse;
 import devgraft.member.domain.IdentityCodeProvider;
 import devgraft.member.domain.Member;
 import devgraft.member.domain.MemberRepository;
@@ -16,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SignUpUseCase {
     private final IdentityCodeProvider identityCodeProvider;
     private final MemberRepository memberRepository;
-
+    private final AuthIssueService authIssueService;
     @Transactional
     public SignUpResponse signUp(final SignUpRequest request) {
         final Member member = Member.create(request.getNickname(), identityCodeProvider, memberRepository);
-        return new SignUpResponse(member.getIdentityCode());
+        final AuthIssuedResponse issued = authIssueService.issued(member.getIdentityCode());
+        return new SignUpResponse(issued.getAccessToken(), issued.getRefreshToken());
     }
 
     @AllArgsConstructor
@@ -33,6 +36,7 @@ public class SignUpUseCase {
     @AllArgsConstructor
     @Getter
     public static class SignUpResponse {
-        private String identityCode;
+        private String accessToken;
+        private String refreshToken;
     }
 }

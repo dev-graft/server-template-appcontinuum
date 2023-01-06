@@ -28,4 +28,6 @@ public class MemberApi {
     public SignUpResponse signUp(@RequestBody final SignUpRequest request) {
         return signUpUseCase.signUp(request);
     }
+
+    // 로그인
 }
