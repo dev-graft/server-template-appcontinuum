@@ -13,6 +13,9 @@ include ':features:support-credentials'
 include ':components:module-member'
 include ':components:module-friend'
 include ':components:module-chat'
+include ':components:module-auth'
+/* client */
+include ':components:client-auth'
 /* applications */
 include ':applications:app-discovery'
 include ':applications:app-gateway'

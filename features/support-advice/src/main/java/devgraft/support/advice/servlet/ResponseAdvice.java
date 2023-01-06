@@ -1,5 +1,8 @@
-package devgraft.support.advice;
+package devgraft.support.advice.servlet;
 
+import devgraft.support.advice.CommonResult;
+import devgraft.support.advice.PageableResult;
+import devgraft.support.advice.SingleResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
@@ -15,7 +18,6 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RestControllerAdvice
@@ -26,7 +28,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
                                   List<String> ignoreUrlPatternList) {
         ignores = ignoreUrlPatternList.stream()
                 .map(pattern -> new PathPatternParser().parse(pattern))
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     @Override
@@ -46,7 +48,7 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
         } else if (PageImpl.class.isInstance(body)) {
             final PageImpl<Object> pageObject = (PageImpl<Object>) body;
-            return SingleResult.success(SearchResult.from(pageObject));
+            return SingleResult.success(PageableResult.from(pageObject));
         }
 
         return null != body ? SingleResult.success(body) : CommonResult.success();
