@@ -19,6 +19,7 @@ public class SignUpUseCase {
     private final IdentityCodeProvider identityCodeProvider;
     private final MemberRepository memberRepository;
     private final AuthIssueService authIssueService;
+
     @Transactional
     public SignUpResponse signUp(final SignUpRequest request) {
         final Member member = Member.create(request.getNickname(), identityCodeProvider, memberRepository);

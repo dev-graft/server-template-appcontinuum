@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class GrpcAuthIssueService implements AuthIssueService {
     @GrpcClient("auth")
     private AuthIssueGrpc.AuthIssueBlockingStub authIssueStub;
+
     @Override
     public AuthIssuedResponse issued(final String identityCode) {
         final AuthIssueRequest request = AuthIssueRequest.newBuilder()
