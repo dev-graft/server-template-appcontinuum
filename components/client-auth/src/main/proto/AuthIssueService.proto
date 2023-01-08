@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_multiple_files = false;
+option java_package = "devgraft.auth";
+option java_outer_classname = "AuthIssueServiceProto";
+
+service AuthIssue {
+  rpc callMethod (AuthIssueRequest) returns (AuthIssueReply) {}
+}
+
+message AuthIssueRequest {
+  string identityCode = 1;
+}
+
+message AuthIssueReply {
+  string accessToken = 1;
+  string refreshToken = 2;
+}

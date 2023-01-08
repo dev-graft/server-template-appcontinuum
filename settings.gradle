@@ -1,4 +1,4 @@
-rootProject.name = 'syuck-syuck'
+rootProject.name = 'server-template-appcontinuum'
 
 /* supports */
 include ':features:support-mapper' // objectMapper 설정(기본 종속)
@@ -8,3 +8,15 @@ include ':features:support-advice'
 include ':features:support-swagger'
 include ':features:support-sentry'
 include ':features:support-event'
+include ':features:support-credentials'
+/* components */
+include ':components:module-member'
+include ':components:module-friend'
+include ':components:module-chat'
+include ':components:module-auth'
+/* client */
+include ':components:client-auth'
+/* applications */
+include ':applications:app-discovery'
+include ':applications:app-gateway'
+include ':applications:app-member'
